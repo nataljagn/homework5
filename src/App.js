@@ -4,6 +4,10 @@ import Moment from 'moment';
 import { useState } from 'react';
 
 
+
+
+
+
 function App() {
 
   const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +27,9 @@ function App() {
     },
 
     {
-      name: 'Rovaniemi',
-      latitude: 66.5030,
-      longitude: 25.7269
+      name: 'Oslo',
+      latitude: 59.9114,
+      longitude: 10.7579
     }
 
   ]);
@@ -42,7 +46,7 @@ function App() {
     const dataJson = await data.json();
     setIsLoading(false);
     setselectedLocationWeather(dataJson);
-    console.log(dataJson);
+  
   }
 
 
@@ -67,30 +71,31 @@ function App() {
                 <div><strong>{selectedLocation.name}</strong></div>
                 {isLoading ? 'Laen..' : (
                   <div>
-                      <div>It is {selectedLocationWeather.current.temperature_2m}{selectedLocationWeather.current_units.temperature_2m} in {selectedLocation.name} . </div>
+                      <div>It is {Math.round(selectedLocationWeather.current.temperature_2m)}{selectedLocationWeather.current_units.temperature_2m} in {selectedLocation.name} . </div>
                       <br />
                   </div>
                 )}
                 {selectedLocationWeather ? (
-                  <>
-
-                    {[...Array(6)].map((elementInArray, index) => (
-
-                      <table>
-                        {isLoading ? 'Loading..' : (
-
-                         <tr>
-                           <td> {Moment(selectedLocationWeather.daily.time[index]).format('DD-MMM-YYYY')} &nbsp;&nbsp;&nbsp;</td>
-                           <td> {Moment(selectedLocationWeather.daily.sunrise[index]).format('LT')}/{Moment(selectedLocationWeather.daily.sunset[index]).format('LT')}</td>&nbsp;&nbsp;&nbsp;
-                           <td> {selectedLocationWeather.daily.temperature_2m_max[index]}{selectedLocationWeather.daily_units.temperature_2m_max}/{selectedLocationWeather.daily.temperature_2m_min[index]}{selectedLocationWeather.daily_units.temperature_2m_min}</td>&nbsp;&nbsp;&nbsp;
-                           <td> {selectedLocationWeather.daily.precipitation_probability_max[index]}{selectedLocationWeather.daily_units.precipitation_probability_max}</td>&nbsp;&nbsp;&nbsp;
-                           <td> {selectedLocationWeather.daily.wind_speed_10m_max[index]}{selectedLocationWeather.daily_units.wind_speed_10m_max}</td>&nbsp;&nbsp;&nbsp;
-                         </tr>
-                        )}
-                      </table>
+                  <table style={{border: "1px solid grey", padding: 24}} >
+                  
+                      <tr>
+                        <th width="200" align="left">Date</th>
+                        <th width="240" align="left">Sunrise/Sunset</th>
+                        <th width="240" align="left">Min/Max Temp</th>
+                        <th width="100" align="left">Ppt %</th>
+                        <th width="160" align="left">Wind max</th>
+                      </tr>
+                    {[...Array(7)].map((key, index) => (               
+                    <tr>      
+                       <td align="left">  {Moment(selectedLocationWeather.daily.time[index]).format('DD-MMM-YYYY')} </td>
+                       <td align="left">  {Moment(selectedLocationWeather.daily.sunrise[index]).format('LT')}/{Moment(selectedLocationWeather.daily.sunset[index]).format('LT')}</td>
+                       <td align="center">  {Math.round(selectedLocationWeather.daily.temperature_2m_max[index])}{selectedLocationWeather.daily_units.temperature_2m_max}/{Math.round(selectedLocationWeather.daily.temperature_2m_min[index])}{selectedLocationWeather.daily_units.temperature_2m_min}</td>
+                       <td align="left">  {selectedLocationWeather.daily.precipitation_probability_max[index]}{selectedLocationWeather.daily_units.precipitation_probability_max}</td>
+                       <td align="left">  {selectedLocationWeather.daily.wind_speed_10m_max[index]}{selectedLocationWeather.daily_units.wind_speed_10m_max}</td>                       
+                     </tr>                    
                     )
                     )}
-                  </>
+                 </table>
                 ) : null}
               </div>
             </>
